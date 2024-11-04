@@ -7,8 +7,16 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Button } from "../ui/button";
+import { signIn } from "next-auth/react";
 import Image from "next/image";
+import { Button } from "../ui/button";
+
+const handleGoogleLogin = async () => {
+  signIn("google", {
+    redirect: true,
+    callbackUrl: "/",
+  });
+};
 
 const LoginModal = () => {
   return (

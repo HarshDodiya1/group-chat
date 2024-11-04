@@ -1,11 +1,10 @@
-import express, { Request, Response } from "express";
-import dotenv from "dotenv";
-import cors from "cors";
 import cookieParser from "cookie-parser";
+import cors from "cors";
+import dotenv from "dotenv";
+import express from "express";
 import { config } from "./config/config";
 
 const app = express();
-
 dotenv.config();
 
 // CORS Configuration
@@ -29,20 +28,15 @@ app.use(express.static("public"));
 app.use(cookieParser());
 
 // Imported Routes
-// Example: app.use('/api/users', userRoutes);
+import { defaultRoute } from "./routes/defaultRoute";
+import { authRoute } from "./routes/AuthRoutes";
 
-// Root route
-app.get("/", (req: Request, res: Response) => {
-  res.status(200).json({
-    message: "Welcome to the Backend APIs",
-    creator: "Harsh Dodiya",
-    LinkedIn: config.linkedIn || "Harsh Dodiya",
-    GitHub: config.github || "Harsh Dodiya",
-  });
-});
+// Example: app.use('/api/users', userRoutes);
+app.use("/", defaultRoute);
+app.use("/api/auth", authRoute);
 
 // Server listener
 const port = config.port || 3000;
 app.listen(port, () => {
-  console.log(`⚙️  Server is running at port: ${config.port}`);
+  console.log(`⚙️  Server is running at port: ${port}`);
 });
