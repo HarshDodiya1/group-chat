@@ -50,12 +50,14 @@ class AuthController {
           token: `Bearer ${token}`,
         },
       });
+      return;
     } catch (error) {
       // Handle the error response without returning it
       res
         .status(500)
         .json({ message: "Something went wrong while logging in", error });
     }
+    return;
   }
 }
 

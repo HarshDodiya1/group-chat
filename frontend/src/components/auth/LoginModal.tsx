@@ -14,7 +14,7 @@ import { Button } from "../ui/button";
 const handleGoogleLogin = async () => {
   signIn("google", {
     redirect: true,
-    callbackUrl: "/",
+    callbackUrl: "/dashboard",
   });
 };
 
