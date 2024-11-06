@@ -6,7 +6,8 @@
       "rootDir": ".",                    // The root directory for source files
       "strict": true,                    // Enable strict type-checking options
       "esModuleInterop": true,           // Enable ES module interop for CommonJS
-      "skipLibCheck": true               // Skip type checking of all declaration files
+      "skipLibCheck": true,               // Skip type checking of all declaration files
+      
     },
     "include": ["./**/*.ts"],            // Include all .ts files in the current directory and subdirectories
     "exclude": ["node_modules"]          // Exclude node_modules

@@ -30,10 +30,12 @@ app.use(cookieParser());
 // Imported Routes
 import { defaultRoute } from "./routes/defaultRoute";
 import { authRoute } from "./routes/AuthRoutes";
+import { chatRoute } from "./routes/ChatGroupRoutes";
 
 // Example: app.use('/api/users', userRoutes);
 app.use("/", defaultRoute);
 app.use("/api/auth", authRoute);
+app.use("/api", chatRoute);
 
 // Server listener
 const port = config.port || 3000;
