@@ -11,7 +11,7 @@ class ChatGroupController {
     try {
       const { title, passcode } = req.body;
 
-      await db.chatGroup.create({
+      const chatGroupData = await db.chatGroup.create({
         data: {
           title,
           passcode,
@@ -19,7 +19,9 @@ class ChatGroupController {
         },
       });
 
-      res.json({ message: "Chat Group created successfully!" });
+      const { passcode: string, ...data } = chatGroupData;
+
+      res.json({ message: "Chat Group created successfully!", data });
       return;
     } catch (error) {
       console.error("Error creating chat group:", error);
