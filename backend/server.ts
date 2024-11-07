@@ -1,21 +1,38 @@
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import dotenv from "dotenv";
-import express from "express";
+import express, { Application, Request, Response } from "express";
 import { config } from "./config/config";
+import { createServer } from "http";
+import { Server } from "socket.io";
+import { setupSocket } from "./socket";
 
-const app = express();
+const app: Application = express();
 dotenv.config();
 
-// CORS Configuration
-app.use(
-  cors({
+// socket.io
+const server = createServer(app);
+const io = new Server(server, {
+  cors: {
     origin: [config.cors_origin1, config.cors_origin2],
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true,
-    allowedHeaders: ["Content-Type", "Authorization"],
-  }),
-);
+  },
+});
+
+setupSocket(io);
+export { io };
+
+// CORS Configuration
+// app.use(
+//   cors({
+//     origin: [config.cors_origin1, config.cors_origin2],
+//     methods: ["GET", "POST", "PUT", "DELETE"],
+//     credentials: true,
+//     allowedHeaders: ["Content-Type", "Authorization"],
+//   }),
+//   cors({
+//     origin: "*",
+//   }),
+// );
 
 // Body parsers
 app.use(express.json({ limit: "20kb" }));
@@ -39,6 +56,6 @@ app.use("/api", chatRoute);
 
 // Server listener
 const port = config.port || 3000;
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`⚙️  Server is running at port: ${port}`);
 });

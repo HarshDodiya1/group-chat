@@ -13,9 +13,8 @@ export default async function dashboard() {
   const groups: Array<GroupChatType> | [] = await fetchChatGroups(
     session?.user?.token!
   );
-  console.log("The gruops are", groups);
   return (
-    <div className="flex flex-col h-screen">
+    <div>
       <DashNav
         name={session?.user?.name!}
         image={session?.user?.image ?? undefined}
