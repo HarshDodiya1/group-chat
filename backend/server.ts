@@ -1,11 +1,13 @@
 import cookieParser from "cookie-parser";
-import cors from "cors";
 import dotenv from "dotenv";
-import express, { Application, Request, Response } from "express";
-import { config } from "./config/config";
+import express, { Application } from "express";
 import { createServer } from "http";
 import { Server } from "socket.io";
+import { config } from "./config/config";
 import { setupSocket } from "./socket";
+import { createAdapter } from "@socket.io/redis-streams-adapter";
+import redis from "./config/redis.config";
+import { instrument } from "@socket.io/admin-ui";
 
 const app: Application = express();
 dotenv.config();
@@ -14,12 +16,23 @@ dotenv.config();
 const server = createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: [config.cors_origin1, config.cors_origin2],
+    origin: [
+      config.cors_origin1,
+      config.cors_origin2,
+      config.socketIo,
+    ],
+    credentials: true,
   },
+  adapter: createAdapter(redis),
 });
 
-setupSocket(io);
+
+instrument(io, {
+  auth: false,
+});
+
 export { io };
+setupSocket(io);
 
 // CORS Configuration
 // app.use(
@@ -45,9 +58,9 @@ app.use(express.static("public"));
 app.use(cookieParser());
 
 // Imported Routes
-import { defaultRoute } from "./routes/defaultRoute";
 import { authRoute } from "./routes/AuthRoutes";
 import { chatRoute } from "./routes/ChatGroupRoutes";
+import { defaultRoute } from "./routes/defaultRoute";
 
 // Example: app.use('/api/users', userRoutes);
 app.use("/", defaultRoute);
