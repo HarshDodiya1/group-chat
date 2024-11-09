@@ -71,23 +71,22 @@ class ChatGroupController {
   static async fetchChatGroupById(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
-      const fetchedChatGroup = await db.chatGroup.findUnique({
-        where: {
-          id: id,
-        },
-      });
+      if (id) {
+        const group = await db.chatGroup.findUnique({
+          where: {
+            id: id,
+          },
+        });
+        res.json({ data: group });
+        return;
+      }
 
-      res.json({
-        message: "Chat Group fetched successfully by group_id!",
-        data: fetchedChatGroup,
-      });
+      res.status(404).json({ message: "No groups found" });
       return;
     } catch (error) {
-      console.error("Error while fetching chat groups by group_id:", error);
-      res.status(500).json({
-        message:
-          "Something went wrong while fetching the chat groups by group_id",
-      });
+      res
+        .status(500)
+        .json({ message: "Something went wrong.please try again!" });
       return;
     }
   }

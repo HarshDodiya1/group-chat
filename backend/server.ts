@@ -1,6 +1,7 @@
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import express, { Application } from "express";
+import cors from "cors"; // Import cors
 import { createServer } from "http";
 import { Server } from "socket.io";
 import { config } from "./config/config";
@@ -9,43 +10,36 @@ import { createAdapter } from "@socket.io/redis-streams-adapter";
 import redis from "./config/redis.config";
 import { instrument } from "@socket.io/admin-ui";
 
-const app: Application = express();
 dotenv.config();
+const app: Application = express();
+
+// CORS Configuration
+app.use(
+  cors({
+    origin: [config.cors_origin1, config.cors_origin2], // Ensure frontend origin is allowed
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+    allowedHeaders: ["Content-Type", "Authorization"],
+  }),
+);
 
 // socket.io
 const server = createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: [
-      config.cors_origin1,
-      config.cors_origin2,
-      config.socketIo,
-    ],
+    origin: [config.cors_origin1, config.cors_origin2, config.socketIo],
     credentials: true,
   },
   adapter: createAdapter(redis),
 });
 
-
+// Uncomment if using Socket.io Admin UI
 instrument(io, {
   auth: false,
 });
 
 export { io };
 setupSocket(io);
-
-// CORS Configuration
-// app.use(
-//   cors({
-//     origin: [config.cors_origin1, config.cors_origin2],
-//     methods: ["GET", "POST", "PUT", "DELETE"],
-//     credentials: true,
-//     allowedHeaders: ["Content-Type", "Authorization"],
-//   }),
-//   cors({
-//     origin: "*",
-//   }),
-// );
 
 // Body parsers
 app.use(express.json({ limit: "20kb" }));
@@ -61,11 +55,14 @@ app.use(cookieParser());
 import { authRoute } from "./routes/AuthRoutes";
 import { chatRoute } from "./routes/ChatGroupRoutes";
 import { defaultRoute } from "./routes/defaultRoute";
+import { chatGroupUserRoutes } from "./routes/ChatGroupUserRoutes";
+import { ChatsRoutes } from "./routes/ChatsRoutes";
 
-// Example: app.use('/api/users', userRoutes);
 app.use("/", defaultRoute);
 app.use("/api/auth", authRoute);
 app.use("/api", chatRoute);
+app.use("/api", chatGroupUserRoutes);
+app.use("/api", ChatsRoutes);
 
 // Server listener
 const port = config.port || 3000;
