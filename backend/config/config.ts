@@ -11,4 +11,8 @@ export const config = {
   jwtSecret: process.env.JWT_SECRET,
   linkedIn: process.env.LINKEDIN,
   github: process.env.GITHUB,
+  kafkaBroker: process.env.KAFKA_BROKER,
+  kafkaUsername: process.env.KAFKA_USERNAME,
+  kafkaPassword: process.env.KAFKA_PASSWORD,
+  kafkaTopic: process.env.KAFKA_TOPIC,
 };

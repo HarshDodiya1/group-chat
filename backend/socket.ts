@@ -1,4 +1,6 @@
 import { Server, Socket } from "socket.io";
+import db from "./db/db";
+import { produceMessage } from "./helper";
 
 interface CustomSocket extends Socket {
   room?: string;
@@ -19,10 +21,13 @@ export function setupSocket(io: Server) {
 
     console.log("The socket is connected", socket.id);
 
-    socket.on("message", (data) => {
-      console.log("server side message is : ", data);
-      // socket.broadcast.emit("message", data);
-      io.to(socket.room!).emit("message", data);
+    socket.on("message", async (data) => {
+      try {
+        await produceMessage("chats", data);
+      } catch (error) {
+        console.error("The Kafka producer error is : ", error);
+      }
+      socket.to(socket.room!).emit("message", data);
     });
 
     socket.on("disconnect", () => {

@@ -52,7 +52,7 @@ export default function ChatBase({
         )}
 
         {/* Messages */}
-        <Chats oldMessages={oldMessages} group={group} chatUser={chatUser} />
+        <Chats group={group} chatUser={chatUser} oldMessages={oldMessages} />
       </div>
     </div>
   );
