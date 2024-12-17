@@ -22,11 +22,15 @@ export function setupSocket(io: Server) {
     console.log("The socket is connected", socket.id);
 
     socket.on("message", async (data) => {
-      try {
-        await produceMessage("chats", data);
-      } catch (error) {
-        console.error("The Kafka producer error is : ", error);
-      }
+      // try {
+      //   await produceMessage("chats", data);
+      // } catch (error) {
+      //   console.error("The Kafka producer error is : ", error);
+      // }
+      // socket.broadcast.emit("message", data);
+      await db.chats.create({
+        data: data,
+      })
       socket.to(socket.room!).emit("message", data);
     });
 
@@ -35,3 +39,7 @@ export function setupSocket(io: Server) {
     });
   });
 }
+
+// at parseError (D:\GitHub Projects\Group-Chat\backend\node_modules\redis-parser\lib\parser.js:179:12)
+// at parseType (D:\GitHub Projects\Group-Chat\backend\node_modules\redis-parser\lib\parser.js:302:14)
+// [ioredis] Unhandled error event: ReplyError: NOAUTH Authentication required.

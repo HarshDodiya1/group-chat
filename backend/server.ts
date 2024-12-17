@@ -57,7 +57,7 @@ import { chatRoute } from "./routes/ChatGroupRoutes";
 import { defaultRoute } from "./routes/defaultRoute";
 import { chatGroupUserRoutes } from "./routes/ChatGroupUserRoutes";
 import { ChatsRoutes } from "./routes/ChatsRoutes";
-import { connectKafkaProducer } from "./config/kafka.config";
+// import { connectKafkaProducer } from "./config/kafka.config";
 import { consumeMessage } from "./helper";
 
 app.use("/", defaultRoute);
@@ -68,13 +68,13 @@ app.use("/api", ChatsRoutes);
 
 // Server listener
 
-connectKafkaProducer().catch((err) => {
-  console.error("Error connecting to Kafka producer:", err);
-});
+// connectKafkaProducer().catch((err) => {
+//   console.error("Error connecting to Kafka producer:", err);
+// });
 
-consumeMessage(config.kafkaTopic!).catch((err) => {
-  console.error("Error consuming Kafka message:", err);
-});
+// consumeMessage(config.kafkaTopic!).catch((err) => {
+//   console.error("Error consuming Kafka message:", err);
+// });
 
 const port = config.port || 3000;
 server.listen(port, () => {
